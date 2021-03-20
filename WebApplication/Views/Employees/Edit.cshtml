@@ -1,0 +1,32 @@
+﻿@model EditEmployeeViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id">
+    <div class="form-group">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control">
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control">
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="HireDate" class="form-label"></label>
+        <input asp-for="HireDate" class="form-control">
+        <span asp-validation-for="HireDate" class="text-danger"></span>
+    </div>
+    <button class="btn btn-primary">Utwórz</button>
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"/>
+}
