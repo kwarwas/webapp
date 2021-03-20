@@ -1,0 +1,11 @@
+﻿@model EmployeeDetailsViewModel
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">@Model.TitleOfCourtesy @Model.FirstName @Model.LastName</h2>
+        <p class="card-text">@Model.Title</p>
+        <div>
+            <partial name="_AddressPartial" model="@Model.Address"/>
+        </div>
+    </div>
+</div>

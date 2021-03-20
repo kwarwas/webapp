@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace WebApplication.Controllers
     {
         private readonly NorthwindContext _context;
         private readonly ILogger<EmployeesController> _logger;
-        
+
         public EmployeesController(
             NorthwindContext context,
             ILogger<EmployeesController> logger)
@@ -29,25 +30,39 @@ namespace WebApplication.Controllers
             {
                 employees = employees.Where(x => x.LastName.Contains(searchPhrase) || x.City.Contains(searchPhrase));
             }
-            
+
             var vm = new EmployeesViewModel
             {
                 Employees = employees.ToArray()
             };
-            
+
             return View(vm);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var data = await _context.Employees
+                .Include(x => x.ReportsToNavigation)
+                .FirstOrDefaultAsync(x => x.EmployeeId == id);
+
+            if (data is null)
+                return RedirectToAction("Index");
+
+            var viewModel = new EmployeeDetailsViewModel(data);
+            
+            return View(viewModel);
         }
 
         public IActionResult Create()
         {
             return View();
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateEmployeeViewModel viewModel)
         {
             if (!ModelState.IsValid)
-               return View(viewModel);
+                return View(viewModel);
 
             await _context.Employees.AddAsync(new Employee
             {
@@ -64,7 +79,7 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var data = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == id);
-            
+
             return View(new EditEmployeeViewModel
             {
                 Id = data.EmployeeId,
@@ -73,11 +88,39 @@ namespace WebApplication.Controllers
                 HireDate = data.HireDate.GetValueOrDefault()
             });
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Edit(EditEmployeeViewModel viewModel)
         {
-            return null;
+            var data = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == viewModel.Id);
+
+            data.FirstName = viewModel.FirstName;
+            data.LastName = viewModel.LastName;
+            data.HireDate = viewModel.HireDate;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            return View(id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePOST(int id)
+        {
+            var data = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == id);
+
+            if (data is null)
+                return RedirectToAction("Index");
+
+            _context.Employees.Remove(data);
+
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,0 +1,16 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Usuwanie pracownika";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div>
+    Czy jesteś pewien, że chcesz usunąć pracownika?
+</div>
+
+<form asp-action="DeletePOST" method="post">
+    <input type="hidden" name="id" value="@Model">
+    <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+    <button class="btn btn-danger">Usuń</button>
+</form>

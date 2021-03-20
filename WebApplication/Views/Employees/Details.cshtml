@@ -1,0 +1,17 @@
+﻿@model EmployeeDetailsViewModel
+@{
+    ViewData["Title"] = "Szczegóły pracownika";
+}
+
+<h1>@ViewBag.Title</h1>
+
+
+<partial name="_EmployeeDetailsPartial" model="@Model"/>
+
+<h1 class="mt-4">Szef</h1>
+
+<partial name="_EmployeeDetailsPartial" model="@Model.ReportsTo"/>
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+</div>
