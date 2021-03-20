@@ -51,7 +51,6 @@ namespace WebApplication.Controllers
 
             await _context.Employees.AddAsync(new Employee
             {
-                EmployeeId = (short)(_context.Employees.Max(x => x.EmployeeId) + 1),
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 HireDate = viewModel.HireDate
@@ -62,7 +61,7 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Edit(short id)
+        public async Task<IActionResult> Edit(int id)
         {
             var data = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == id);
             
