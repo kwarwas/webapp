@@ -34,6 +34,10 @@
 </header>
 <div class="container">
     <main role="main" class="pb-3">
+        @if (!(ViewBag.SkipTitle is not null && ViewBag.SkipTitle))
+        {
+            <h1>@ViewBag.Title</h1>
+        }
         @RenderBody()
     </main>
 </div>

@@ -38,6 +38,17 @@ namespace WebApplication.Controllers
             return View(vm);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var data = await _context.Employees
+                .Include(x => x.ReportsToNavigation)
+                .FirstOrDefaultAsync(x => x.EmployeeId == id);
+
+            var viewModel = new DetailsEmployeeViewModel(data);
+            
+            return View(viewModel);
+        }
+
         public IActionResult Create()
         {
             return View();
@@ -51,7 +62,6 @@ namespace WebApplication.Controllers
 
             await _context.Employees.AddAsync(new Employee
             {
-                EmployeeId = (short)(_context.Employees.Max(x => x.EmployeeId) + 1),
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 HireDate = viewModel.HireDate
@@ -62,7 +72,7 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Edit(short id)
+        public async Task<IActionResult> Edit(int id)
         {
             var data = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == id);
             
@@ -78,7 +88,38 @@ namespace WebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditEmployeeViewModel viewModel)
         {
-            return null;
+            if (!ModelState.IsValid)
+                return View(viewModel);
+
+            var data = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == viewModel.Id);
+
+            data.FirstName = viewModel.FirstName;
+            data.LastName = viewModel.LastName;
+            data.HireDate = viewModel.HireDate;
+
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            return View(new DeleteEmployeeViewModel(id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteEmployeeViewModel viewModel)
+        {
+            var data = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeId == viewModel.Id);
+
+            if (data is null)
+                return View(new DeleteEmployeeViewModel(viewModel.Id, "Użytkownik nie istnieje w sytstemie"));
+
+            _context.Employees.Remove(data);
+
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Index");
         }
     }
 }

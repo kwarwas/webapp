@@ -1,10 +1,8 @@
 ﻿@model EditEmployeeViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edycja pracownika";
 }
-
-<h1>@ViewBag.Title</h1>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id">
@@ -23,7 +21,8 @@
         <input asp-for="HireDate" class="form-control">
         <span asp-validation-for="HireDate" class="text-danger"></span>
     </div>
-    <button class="btn btn-primary">Utwórz</button>
+    <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+    <button class="btn btn-primary">Zapisz</button>
 </form>
 
 @section Scripts

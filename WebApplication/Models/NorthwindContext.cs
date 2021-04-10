@@ -24,90 +24,62 @@ namespace WebApplication.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=northwind;Username=postgres;Password=password");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=Northwind;User Id=sa;Password=yourStrong(!)Password;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "en_US.utf8");
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
             modelBuilder.Entity<Employee>(entity =>
             {
-                entity.ToTable("employees");
+                entity.HasIndex(e => e.LastName, "LastName");
 
-                entity.Property(e => e.EmployeeId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("employee_id");
+                entity.HasIndex(e => e.PostalCode, "PostalCode");
 
-                entity.Property(e => e.Address)
-                    .HasMaxLength(60)
-                    .HasColumnName("address");
+                entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
 
-                entity.Property(e => e.BirthDate)
-                    .HasColumnType("date")
-                    .HasColumnName("birth_date");
+                entity.Property(e => e.Address).HasMaxLength(60);
 
-                entity.Property(e => e.City)
-                    .HasMaxLength(15)
-                    .HasColumnName("city");
+                entity.Property(e => e.BirthDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Country)
-                    .HasMaxLength(15)
-                    .HasColumnName("country");
+                entity.Property(e => e.City).HasMaxLength(15);
 
-                entity.Property(e => e.Extension)
-                    .HasMaxLength(4)
-                    .HasColumnName("extension");
+                entity.Property(e => e.Country).HasMaxLength(15);
+
+                entity.Property(e => e.Extension).HasMaxLength(4);
 
                 entity.Property(e => e.FirstName)
                     .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("first_name");
+                    .HasMaxLength(10);
 
-                entity.Property(e => e.HireDate)
-                    .HasColumnType("date")
-                    .HasColumnName("hire_date");
+                entity.Property(e => e.HireDate).HasColumnType("datetime");
 
-                entity.Property(e => e.HomePhone)
-                    .HasMaxLength(24)
-                    .HasColumnName("home_phone");
+                entity.Property(e => e.HomePhone).HasMaxLength(24);
 
                 entity.Property(e => e.LastName)
                     .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnName("last_name");
+                    .HasMaxLength(20);
 
-                entity.Property(e => e.Notes).HasColumnName("notes");
+                entity.Property(e => e.Notes).HasColumnType("ntext");
 
-                entity.Property(e => e.Photo).HasColumnName("photo");
+                entity.Property(e => e.Photo).HasColumnType("image");
 
-                entity.Property(e => e.PhotoPath)
-                    .HasMaxLength(255)
-                    .HasColumnName("photo_path");
+                entity.Property(e => e.PhotoPath).HasMaxLength(255);
 
-                entity.Property(e => e.PostalCode)
-                    .HasMaxLength(10)
-                    .HasColumnName("postal_code");
+                entity.Property(e => e.PostalCode).HasMaxLength(10);
 
-                entity.Property(e => e.Region)
-                    .HasMaxLength(15)
-                    .HasColumnName("region");
+                entity.Property(e => e.Region).HasMaxLength(15);
 
-                entity.Property(e => e.ReportsTo).HasColumnName("reports_to");
+                entity.Property(e => e.Title).HasMaxLength(30);
 
-                entity.Property(e => e.Title)
-                    .HasMaxLength(30)
-                    .HasColumnName("title");
-
-                entity.Property(e => e.TitleOfCourtesy)
-                    .HasMaxLength(25)
-                    .HasColumnName("title_of_courtesy");
+                entity.Property(e => e.TitleOfCourtesy).HasMaxLength(25);
 
                 entity.HasOne(d => d.ReportsToNavigation)
                     .WithMany(p => p.InverseReportsToNavigation)
                     .HasForeignKey(d => d.ReportsTo)
-                    .HasConstraintName("fk_employees_employees");
+                    .HasConstraintName("FK_Employees_Employees");
             });
 
             OnModelCreatingPartial(modelBuilder);

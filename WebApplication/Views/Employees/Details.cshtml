@@ -1,0 +1,11 @@
+﻿@model DetailsEmployeeViewModel
+
+@{
+    ViewData["Title"] = "Szczegóły pracownika";
+}
+
+<partial name="_EmployeeDetailsPartial" model="@Model"/>
+
+<h1 class="mt-4">Szef</h1>
+
+<partial name="_EmployeeDetailsPartial" model="@Model.ReportsTo"/>

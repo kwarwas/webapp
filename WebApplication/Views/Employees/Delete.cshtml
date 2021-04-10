@@ -1,0 +1,23 @@
+﻿@model DeleteEmployeeViewModel
+@{
+    ViewData["Title"] = "Usuwanie pracownika";
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Message))
+{
+    <div class="text-danger">
+        Wprowadzono niepoprawne dane
+    </div>
+}
+else
+{
+    <div>
+        Czy jesteś pewnien, że chcesz usunąc pracowanika?
+    </div>
+
+    <form method="post" asp-action="Delete">
+        <input type="hidden" asp-for="Id">
+        <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+        <button class="btn btn-danger">Usuń</button>
+    </form>
+}
