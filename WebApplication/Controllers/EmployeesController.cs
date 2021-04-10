@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ namespace WebApplication.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Index(string searchPhrase)
         {
             IQueryable<Employee> employees = _context.Employees;
@@ -45,6 +47,8 @@ namespace WebApplication.Controllers
                 .FirstOrDefaultAsync(x => x.EmployeeId == id);
 
             var viewModel = new DetailsEmployeeViewModel(data);
+
+            ViewBag.cos = "12345";
             
             return View(viewModel);
         }
